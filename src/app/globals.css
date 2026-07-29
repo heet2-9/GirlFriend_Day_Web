@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #F5F0E1;
+  --color-cream-light: #FAF7EE;
+  --color-pink-soft: #FFB6C1;
+  --color-pink-card: #F9B8CB;
+  --color-pink-light: #FDD5E2;
+  --color-pink-heart: #F48BA5;
+  --color-pink-deep: #E8789A;
+  --color-kraft: #D4A574;
+  --color-kraft-dark: #B8895A;
+  --color-tape: #C4A882;
+  --color-tape-light: #D4BFA0;
+  --color-text-dark: #5C4033;
+  --color-text-soft: #8B7355;
+  --color-text-muted: #A09080;
+  --color-jar-pink: #F5D5DE;
+  --color-jar-border: #F0C0D0;
+  --color-sticky: #FFF9C4;
+  --color-sticky-dark: #F0E68C;
+
+  --font-cursive: "Dancing Script", cursive;
+  --font-hand: "Caveat", cursive;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-cream);
+  color: var(--color-text-dark);
+  min-height: 100vh;
+  cursor: pointer;
+}
+
+/* Grid background pattern matching the screenshots */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Floating heart animation */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-12px) rotate(var(--rot, 0deg)); }
+}
+
+@keyframes float-sway {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(var(--rot, -5deg)); }
+  25% { transform: translateY(-8px) translateX(4px) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-14px) translateX(-2px) rotate(var(--rot, 5deg)); }
+  75% { transform: translateY(-6px) translateX(-4px) rotate(var(--rot, -3deg)); }
+}
+
+@keyframes balloon-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+.animate-float-sway {
+  animation: float-sway 6s ease-in-out infinite;
+}
+
+.animate-balloon-sway {
+  animation: balloon-sway 3s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+/* Paper texture subtle effect */
+.paper-texture {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+}
+
+/* Scratch card cursor */
+.scratch-cursor {
+  cursor: crosshair;
+}
+
+/* Handwriting line height */
+.handwriting {
+  font-family: var(--font-cursive);
+  line-height: 1.6;
+}
