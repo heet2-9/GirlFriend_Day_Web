@@ -11,10 +11,10 @@ export default function BalloonCluster() {
         transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
       >
         <motion.svg
-          width="90"
-          height="150"
+          width="60"
+          height="100"
           viewBox="0 0 90 150"
-          className="md:w-[110px] md:h-[175px]"
+          className="sm:w-[75px] sm:h-[125px] md:w-[110px] md:h-[175px]"
           animate={{ rotate: [-1, 1.5, -1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         >

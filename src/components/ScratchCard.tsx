@@ -4,21 +4,238 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 
 interface ScratchCardProps {
-  revealText: string;
-  width?: number;
-  height?: number;
+  leftText: string;
+  rightText: string;
+  batteryLevel: 0 | 50 | 100;
+  batteryColor: string;
+  batteryFaceColor: string;
   index: number;
 }
 
+// Battery face SVG component
+function BatteryFace({
+  level,
+  color,
+  faceColor,
+}: {
+  level: 0 | 50 | 100;
+  color: string;
+  faceColor: string;
+}) {
+  const fillWidth = level === 0 ? 12 : level === 50 ? 30 : 48;
+
+  return (
+    <div className="relative flex flex-col items-center">
+      {/* Vibration / energy lines above battery */}
+      <motion.div
+        className="flex items-end justify-center gap-[3px] mb-1"
+        animate={level === 100 ? { y: [0, -2, 0] } : {}}
+        transition={{ duration: 0.8, repeat: Infinity }}
+      >
+        <svg
+          width="18"
+          height="14"
+          viewBox="0 0 18 14"
+          fill="none"
+          className="shrink-0"
+        >
+          <path
+            d="M3 10 L3 6"
+            stroke={faceColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity={level >= 50 ? 0.8 : 0.3}
+          />
+          <path
+            d="M9 10 L9 3"
+            stroke={faceColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity={level >= 50 ? 1 : 0.4}
+          />
+          <path
+            d="M15 10 L15 6"
+            stroke={faceColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity={level >= 50 ? 0.8 : 0.3}
+          />
+        </svg>
+      </motion.div>
+
+      {/* Battery body */}
+      <svg
+        width="64"
+        height="34"
+        viewBox="0 0 64 34"
+        fill="none"
+        className="shrink-0"
+      >
+        {/* Battery terminal (right nub) */}
+        <rect x="56" y="10" width="6" height="14" rx="2" fill="#D1D5DB" />
+
+        {/* Battery outline */}
+        <rect
+          x="1"
+          y="1"
+          width="54"
+          height="32"
+          rx="6"
+          stroke="#9CA3AF"
+          strokeWidth="2"
+          fill="white"
+        />
+
+        {/* Battery fill level */}
+        <rect
+          x="5"
+          y="5"
+          width={fillWidth}
+          height="24"
+          rx="3"
+          fill={color}
+        />
+
+        {/* Face on battery */}
+        {level === 0 && (
+          /* Sad face */
+          <g>
+            {/* Eyes — > shape (concerned) */}
+            <text
+              x="16"
+              y="20"
+              fontSize="9"
+              fill="white"
+              fontWeight="bold"
+              textAnchor="middle"
+            >
+              •
+            </text>
+            <text
+              x="26"
+              y="20"
+              fontSize="9"
+              fill="white"
+              fontWeight="bold"
+              textAnchor="middle"
+            >
+              •
+            </text>
+            {/* Sad mouth */}
+            <path
+              d="M14 24 Q21 20 28 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </g>
+        )}
+        {level === 50 && (
+          /* Neutral / slight smile face */
+          <g>
+            <text
+              x="22"
+              y="20"
+              fontSize="9"
+              fill="white"
+              fontWeight="bold"
+              textAnchor="middle"
+            >
+              •
+            </text>
+            <text
+              x="34"
+              y="20"
+              fontSize="9"
+              fill="white"
+              fontWeight="bold"
+              textAnchor="middle"
+            >
+              •
+            </text>
+            {/* Slight smile */}
+            <path
+              d="M20 24 Q28 27 36 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </g>
+        )}
+        {level === 100 && (
+          /* Happy face */
+          <g>
+            <text
+              x="22"
+              y="19"
+              fontSize="9"
+              fill="white"
+              fontWeight="bold"
+              textAnchor="middle"
+            >
+              •
+            </text>
+            <text
+              x="36"
+              y="19"
+              fontSize="9"
+              fill="white"
+              fontWeight="bold"
+              textAnchor="middle"
+            >
+              •
+            </text>
+            {/* Big smile */}
+            <path
+              d="M19 22 Q28 29 39 22"
+              fill="none"
+              stroke="white"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+          </g>
+        )}
+      </svg>
+
+      {/* Percentage text */}
+      <p className="text-xs sm:text-sm text-[#5C4033] font-sans font-semibold mt-1">
+        {level}%
+      </p>
+    </div>
+  );
+}
+
 export default function ScratchCard({
-  revealText,
-  width = 340,
-  height = 80,
+  leftText,
+  rightText,
+  batteryLevel,
+  batteryColor,
+  batteryFaceColor,
   index,
 }: ScratchCardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isMouseDown = useRef(false);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [canvasSize, setCanvasSize] = useState({ width: 340, height: 100 });
+
+  // Measure container and set canvas size
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const measure = () => {
+      const rect = container.getBoundingClientRect();
+      setCanvasSize({ width: rect.width, height: rect.height });
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   const getPos = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -54,7 +271,7 @@ export default function ScratchCard({
 
       ctx.globalCompositeOperation = "destination-out";
       ctx.beginPath();
-      ctx.arc(pos.x, pos.y, 22, 0, Math.PI * 2);
+      ctx.arc(pos.x, pos.y, 24, 0, Math.PI * 2);
       ctx.fill();
     },
     []
@@ -71,7 +288,6 @@ export default function ScratchCard({
     let transparent = 0;
     const total = pixels.length / 4;
 
-    // Sample every 4th pixel for performance
     for (let i = 3; i < pixels.length; i += 16) {
       if (pixels[i] === 0) transparent++;
     }
@@ -91,6 +307,7 @@ export default function ScratchCard({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const { width, height } = canvasSize;
     const scale = window.devicePixelRatio || 1;
     canvas.width = width * scale;
     canvas.height = height * scale;
@@ -143,8 +360,8 @@ export default function ScratchCard({
     ctx.font = `italic 500 20px 'Dancing Script', cursive`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("Scratch Me", width / 2, height / 2);
-  }, [width, height]);
+    ctx.fillText("Scratch Me ✨", width / 2, height / 2);
+  }, [canvasSize]);
 
   // Event listeners
   useEffect(() => {
@@ -167,7 +384,6 @@ export default function ScratchCard({
       const pos = getPos(e);
       scratchAt(pos);
       scratchCount++;
-      // Check reveal every 8 scratch moves for perf
       if (scratchCount % 8 === 0) {
         checkReveal();
       }
@@ -201,53 +417,68 @@ export default function ScratchCard({
 
   return (
     <motion.div
-      className="relative"
+      className="relative w-full"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 + index * 0.15, duration: 0.5 }}
-      style={{ width, height }}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Hidden message underneath */}
+      {/* Card container with dashed pink border */}
       <div
-        className="absolute inset-0 flex items-center justify-center rounded-2xl"
+        ref={containerRef}
+        className="relative rounded-2xl overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, #FFF5F7 0%, #FFFFFF 50%, #FFF0F3 100%)",
-          border: "1px solid rgba(249, 184, 203, 0.3)",
-          boxShadow: isRevealed ? "0 4px 15px rgba(249, 184, 203, 0.2)" : "none",
-          transition: "box-shadow 0.5s ease",
+          minHeight: "100px",
+          border: "2px dashed #F9B8CB",
+          background: "linear-gradient(135deg, #FFFBFC 0%, #FFFFFF 50%, #FFF8FA 100%)",
         }}
       >
-        <p className="font-[var(--font-cursive)] text-lg md:text-xl text-[#D4607A] text-center px-6 font-semibold">
-          {revealText}
-        </p>
+        {/* Revealed battery content underneath */}
+        <div className="flex items-center justify-center gap-2 sm:gap-4 px-3 sm:px-5 py-4 sm:py-5">
+          {/* Left text */}
+          <p className="font-[var(--font-cursive)] text-sm sm:text-lg text-[#5C4033] italic text-right min-w-[60px] sm:min-w-[80px]">
+            {leftText}
+          </p>
+
+          {/* Battery with face */}
+          <BatteryFace
+            level={batteryLevel}
+            color={batteryColor}
+            faceColor={batteryFaceColor}
+          />
+
+          {/* Right text */}
+          <p className="font-[var(--font-cursive)] text-sm sm:text-lg text-[#5C4033] italic min-w-[30px]">
+            {rightText}
+          </p>
+        </div>
+
+        {/* Scratch canvas overlay */}
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 rounded-2xl"
+          style={{
+            width: "100%",
+            height: "100%",
+            opacity: isRevealed ? 0 : 1,
+            transition: "opacity 0.6s ease",
+            pointerEvents: isRevealed ? "none" : "auto",
+            cursor: isRevealed ? "default" : "crosshair",
+          }}
+        />
+
+        {/* Sparkle on reveal */}
+        {isRevealed && (
+          <motion.div
+            className="absolute inset-0 pointer-events-none flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ duration: 1 }}
+          >
+            <span className="text-2xl">✨</span>
+          </motion.div>
+        )}
       </div>
-
-      {/* Scratch canvas overlay */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 rounded-2xl"
-        style={{
-          width,
-          height,
-          opacity: isRevealed ? 0 : 1,
-          transition: "opacity 0.6s ease",
-          pointerEvents: isRevealed ? "none" : "auto",
-          cursor: isRevealed ? "default" : "crosshair",
-        }}
-      />
-
-      {/* Sparkle on reveal */}
-      {isRevealed && (
-        <motion.div
-          className="absolute inset-0 pointer-events-none flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ duration: 1 }}
-        >
-          <span className="text-2xl">✨</span>
-        </motion.div>
-      )}
     </motion.div>
   );
 }

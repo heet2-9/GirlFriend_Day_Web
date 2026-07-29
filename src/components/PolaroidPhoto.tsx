@@ -28,14 +28,14 @@ export default function PolaroidPhoto({
       }}
     >
       <div
-        className="bg-white p-3 pb-14 md:p-4 md:pb-16 shadow-xl rounded-sm relative"
+        className="bg-white p-2.5 pb-12 sm:p-3 sm:pb-14 md:p-4 md:pb-16 shadow-xl rounded-sm relative"
         style={{
           transform: `rotate(${rotation}deg)`,
           boxShadow: "0 8px 25px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06)",
         }}
       >
         {/* Photo */}
-        <div className="w-52 h-40 md:w-64 md:h-48 bg-gray-100 overflow-hidden rounded-sm">
+        <div className="w-40 h-32 sm:w-52 sm:h-40 md:w-64 md:h-48 bg-gray-100 overflow-hidden rounded-sm">
           <img
             src={imageSrc}
             alt={caption || "Memory"}
@@ -46,25 +46,25 @@ export default function PolaroidPhoto({
 
         {/* Caption */}
         {caption && (
-          <p className="absolute bottom-4 left-0 right-0 text-center font-[var(--font-hand)] text-sm md:text-base text-[#8B7355]">
+          <p className="absolute bottom-3 sm:bottom-4 left-0 right-0 text-center font-[var(--font-hand)] text-xs sm:text-sm md:text-base text-[#8B7355]">
             {caption}
           </p>
         )}
 
         {/* Heart sticker decoration */}
         <motion.div
-          className="absolute -top-3 -right-3"
+          className="absolute -top-2.5 -right-2.5 sm:-top-3 sm:-right-3"
           animate={{ scale: [1, 1.2, 1], rotate: [0, 10, 0] }}
           transition={{ duration: 2.5, repeat: Infinity }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#F48BA5">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#F48BA5" className="sm:w-[18px] sm:h-[18px] md:w-[20px] md:h-[20px]">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
         </motion.div>
 
         {/* Masking tape at top center */}
         <div
-          className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 rounded-sm"
+          className="absolute -top-2.5 sm:-top-3 left-1/2 -translate-x-1/2 w-12 sm:w-14 md:w-16 h-4 sm:h-5 rounded-sm"
           style={{
             background: "linear-gradient(135deg, #D4BFA0 0%, #C4A882 50%, #B89E78 100%)",
             opacity: 0.55,

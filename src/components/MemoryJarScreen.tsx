@@ -51,7 +51,7 @@ export default function MemoryJarScreen({ onNext }: MemoryJarScreenProps) {
 
   return (
     <motion.div
-      className="min-h-screen flex flex-col items-center justify-center px-4 relative"
+      className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -59,7 +59,7 @@ export default function MemoryJarScreen({ onNext }: MemoryJarScreenProps) {
     >
       {/* Title with masking tape */}
       <motion.div
-        className="relative mb-6 md:mb-8"
+        className="relative mb-4 sm:mb-6 md:mb-8"
         initial={{ y: -30, opacity: 0, rotate: -2 }}
         animate={{ y: 0, opacity: 1, rotate: -1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -67,23 +67,23 @@ export default function MemoryJarScreen({ onNext }: MemoryJarScreenProps) {
         <MaskingTape position="top-left" />
         <MaskingTape position="top-right" />
         <div
-          className="px-10 py-4 rounded-sm shadow-sm"
+          className="px-6 sm:px-10 py-3 sm:py-4 rounded-sm shadow-sm"
           style={{
             background: "linear-gradient(180deg, #FFFFFF 0%, #FDFCF8 100%)",
             border: "1px solid rgba(0,0,0,0.06)",
           }}
         >
-          <h2 className="font-[var(--font-cursive)] text-2xl md:text-3xl text-[#5C4033] italic font-semibold text-center">
+          <h2 className="font-[var(--font-cursive)] text-xl sm:text-2xl md:text-3xl text-[#5C4033] italic font-semibold text-center">
             Memory Jar
           </h2>
-          <p className="font-[var(--font-hand)] text-sm md:text-base text-[#A09080] text-center mt-1">
+          <p className="font-[var(--font-hand)] text-xs sm:text-sm md:text-base text-[#A09080] text-center mt-1">
             Tap the jar to pull out a memory
           </p>
         </div>
       </motion.div>
 
       {/* Polaroid photo display area */}
-      <div className="min-h-[230px] md:min-h-[290px] flex items-center justify-center mb-4">
+      <div className="min-h-[200px] sm:min-h-[230px] md:min-h-[290px] flex items-center justify-center mb-3 sm:mb-4">
         <AnimatePresence mode="wait">
           {currentMemory >= 0 && (
             <PolaroidPhoto
@@ -111,7 +111,7 @@ export default function MemoryJarScreen({ onNext }: MemoryJarScreenProps) {
           animate={{ y: [0, -5, 0] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         >
-          <svg width="110" height="150" viewBox="0 0 110 150" className="md:w-[130px] md:h-[175px] drop-shadow-sm">
+          <svg width="90" height="125" viewBox="0 0 110 150" className="sm:w-[100px] sm:h-[135px] md:w-[130px] md:h-[175px] drop-shadow-sm">
             <defs>
               <linearGradient id="jarBody" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#FDE8EE" stopOpacity="0.9" />
@@ -225,7 +225,7 @@ export default function MemoryJarScreen({ onNext }: MemoryJarScreenProps) {
 
       {/* Open the letter button */}
       <motion.button
-        className="mt-10 px-7 py-3.5 rounded-xl shadow-sm font-sans text-xs md:text-sm tracking-[0.2em] text-[#8B7355] uppercase transition-all duration-200"
+        className="mt-6 sm:mt-8 md:mt-10 px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl shadow-sm font-sans text-[10px] sm:text-xs md:text-sm tracking-[0.2em] text-[#8B7355] uppercase transition-all duration-200"
         style={{
           background: "linear-gradient(180deg, #FDFCF8 0%, #F5F0E1 100%)",
           border: "1px solid rgba(180, 160, 130, 0.2)",

@@ -9,7 +9,7 @@ interface EnvelopeScreenProps {
 export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
   return (
     <motion.div
-      className="min-h-screen flex flex-col items-center justify-center px-4 relative"
+      className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -18,13 +18,13 @@ export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
     >
       {/* Sticky Note - Top Right */}
       <motion.div
-        className="absolute top-20 right-4 md:top-24 md:right-12 z-30"
+        className="absolute top-14 right-2 sm:top-20 sm:right-4 md:top-24 md:right-12 z-30"
         initial={{ rotate: 15, scale: 0, opacity: 0 }}
         animate={{ rotate: 3, scale: 1, opacity: 1 }}
         transition={{ delay: 1.4, duration: 0.5, type: "spring", stiffness: 180 }}
       >
         <div
-          className="px-5 py-3.5 shadow-md relative"
+          className="px-3 sm:px-5 py-2.5 sm:py-3.5 shadow-md relative"
           style={{
             background: "linear-gradient(145deg, #FFF9C4 0%, #FFF59D 40%, #FFEE58 100%)",
             borderRadius: "2px",
@@ -32,17 +32,17 @@ export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
         >
           {/* Tape on top of sticky */}
           <div
-            className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-10 h-3 opacity-50 rounded-sm"
+            className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-8 sm:w-10 h-3 opacity-50 rounded-sm"
             style={{ background: "linear-gradient(135deg, #D4BFA0, #C4A882)" }}
           />
-          <span className="font-[var(--font-cursive)] text-lg md:text-xl text-[#6B5B3A] font-semibold">
+          <span className="font-[var(--font-cursive)] text-base sm:text-lg md:text-xl text-[#6B5B3A] font-semibold">
             For My Cutie :)
           </span>
         </div>
       </motion.div>
 
       {/* Main Envelope Assembly */}
-      <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[380px] flex items-center justify-center">
+      <div className="relative w-[260px] h-[260px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[380px] flex items-center justify-center">
         
         {/* Letter (pops up from envelope) */}
         <motion.div
@@ -53,7 +53,7 @@ export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
           transition={{ delay: 0.5, duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <div
-            className="w-[240px] md:w-[320px] rounded-lg p-6 md:p-8 relative shadow-sm"
+            className="w-[210px] sm:w-[240px] md:w-[320px] rounded-lg p-5 sm:p-6 md:p-8 relative shadow-sm"
             style={{
               background: "linear-gradient(180deg, #FFFEF7 0%, #FBF8EE 100%)",
               border: "1px solid rgba(200, 180, 155, 0.2)",
@@ -86,13 +86,13 @@ export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
               transition={{ delay: 1.1, duration: 0.7 }}
               className="text-center"
             >
-              <p className="font-[var(--font-cursive)] text-2xl md:text-3xl text-[#5C4033] font-bold mb-3">
+              <p className="font-[var(--font-cursive)] text-xl sm:text-2xl md:text-3xl text-[#5C4033] font-bold mb-2 sm:mb-3">
                 Hey, Babe!
               </p>
-              <p className="font-[var(--font-cursive)] text-base md:text-lg text-[#8B7355] leading-relaxed">
+              <p className="font-[var(--font-cursive)] text-sm sm:text-base md:text-lg text-[#8B7355] leading-relaxed">
                 I made a little surprise
               </p>
-              <p className="font-[var(--font-cursive)] text-base md:text-lg text-[#8B7355] leading-relaxed">
+              <p className="font-[var(--font-cursive)] text-sm sm:text-base md:text-lg text-[#8B7355] leading-relaxed">
                 just for you...
               </p>
             </motion.div>
@@ -107,10 +107,10 @@ export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <svg
-            width="300"
-            height="180"
+            width="260"
+            height="156"
             viewBox="0 0 300 180"
-            className="md:w-[380px] md:h-[220px] drop-shadow-md"
+            className="sm:w-[300px] sm:h-[180px] md:w-[380px] md:h-[220px] drop-shadow-md"
           >
             <defs>
               <linearGradient id="envBody" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -159,7 +159,7 @@ export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
         {/* Cute bunny sticker */}
         <motion.div
           className="absolute z-30"
-          style={{ bottom: "5%", right: "-8%" }}
+          style={{ bottom: "5%", right: "-4%" }}
           initial={{ scale: 0, rotate: 20 }}
           animate={{ scale: 1, rotate: 5 }}
           transition={{ delay: 1, duration: 0.6, type: "spring", stiffness: 200 }}
@@ -168,7 +168,7 @@ export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
             animate={{ y: [0, -3, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            <svg width="70" height="85" viewBox="0 0 70 85">
+            <svg width="50" height="62" viewBox="0 0 70 85" className="sm:w-[60px] sm:h-[72px] md:w-[70px] md:h-[85px]">
               {/* Ears */}
               <ellipse cx="24" cy="14" rx="7" ry="15" fill="#FFE8EE" />
               <ellipse cx="24" cy="14" rx="4.5" ry="11" fill="#FFB8C8" opacity="0.6" />
@@ -205,7 +205,7 @@ export default function EnvelopeScreen({ onNext }: EnvelopeScreenProps) {
 
       {/* Tap to begin */}
       <motion.p
-        className="mt-10 text-xs md:text-sm tracking-[0.25em] text-text-muted uppercase font-sans"
+        className="mt-6 sm:mt-8 md:mt-10 text-[10px] sm:text-xs md:text-sm tracking-[0.25em] text-text-muted uppercase font-sans"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.3, 0.7, 0.3] }}
         transition={{ duration: 2.5, repeat: Infinity, delay: 1.8 }}

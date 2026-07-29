@@ -6,7 +6,7 @@ import MaskingTape from "./MaskingTape";
 export default function LoveLetterScreen() {
   return (
     <motion.div
-      className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative"
+      className="min-h-screen flex flex-col items-center justify-center px-3 sm:px-4 py-8 sm:py-12 relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -14,7 +14,7 @@ export default function LoveLetterScreen() {
     >
       {/* Love Letter Paper */}
       <motion.div
-        className="relative max-w-lg w-full"
+        className="relative max-w-lg w-full mx-2"
         initial={{ y: 80, opacity: 0, scale: 0.85, rotate: -3 }}
         animate={{ y: 0, opacity: 1, scale: 1, rotate: 1 }}
         transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -25,7 +25,7 @@ export default function LoveLetterScreen() {
 
         {/* Paper card */}
         <div
-          className="rounded-md shadow-lg p-8 md:p-12 relative overflow-hidden"
+          className="rounded-md shadow-lg p-5 sm:p-8 md:p-12 relative overflow-hidden"
           style={{
             background: "linear-gradient(180deg, #FFFEF7 0%, #FBF8EE 40%, #F7F2E4 100%)",
             border: "1px solid rgba(180, 160, 130, 0.15)",
@@ -49,7 +49,7 @@ export default function LoveLetterScreen() {
             <div
               className="absolute top-0 bottom-0"
               style={{
-                left: "42px",
+                left: "32px",
                 width: "1px",
                 background: "linear-gradient(180deg, transparent 0%, rgba(220, 130, 130, 0.12) 5%, rgba(220, 130, 130, 0.12) 95%, transparent 100%)",
               }}
@@ -58,8 +58,8 @@ export default function LoveLetterScreen() {
 
           {/* Heart decorations */}
           <motion.svg
-            className="absolute top-4 right-5"
-            width="16" height="16" viewBox="0 0 24 24" fill="#F9B0C4"
+            className="absolute top-4 right-4 sm:right-5"
+            width="14" height="14" viewBox="0 0 24 24" fill="#F9B0C4"
             animate={{ scale: [1, 1.2, 1], rotate: [0, 8, 0] }}
             transition={{ duration: 2.5, repeat: Infinity }}
           >
@@ -67,8 +67,8 @@ export default function LoveLetterScreen() {
           </motion.svg>
 
           <motion.svg
-            className="absolute top-7 left-5"
-            width="12" height="12" viewBox="0 0 24 24" fill="#FFB6C1"
+            className="absolute top-6 sm:top-7 left-4 sm:left-5"
+            width="10" height="10" viewBox="0 0 24 24" fill="#FFB6C1"
             animate={{ scale: [1, 1.25, 1] }}
             transition={{ duration: 3, repeat: Infinity, delay: 0.7 }}
           >
@@ -77,19 +77,19 @@ export default function LoveLetterScreen() {
 
           {/* Star sticker */}
           <motion.div
-            className="absolute bottom-4 left-5"
+            className="absolute bottom-4 left-4 sm:left-5"
             animate={{ rotate: [0, 15, 0] }}
             transition={{ duration: 4, repeat: Infinity }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFD54F" opacity="0.7">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD54F" opacity="0.7">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
           </motion.div>
 
           {/* Letter content */}
-          <div className="relative z-10 space-y-4 pl-6 md:pl-8">
+          <div className="relative z-10 space-y-3 sm:space-y-4 pl-4 sm:pl-6 md:pl-8">
             <motion.p
-              className="font-[var(--font-cursive)] text-2xl md:text-3xl text-[#5C4033] font-bold"
+              className="font-[var(--font-cursive)] text-xl sm:text-2xl md:text-3xl text-[#5C4033] font-bold"
               initial={{ opacity: 0, x: -15 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
@@ -98,37 +98,37 @@ export default function LoveLetterScreen() {
             </motion.p>
 
             <motion.div
-              className="space-y-4"
+              className="space-y-3 sm:space-y-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.9, duration: 0.8 }}
             >
-              <p className="font-[var(--font-hand)] text-[17px] md:text-lg text-[#7A6555] leading-[1.75]">
+              <p className="font-[var(--font-hand)] text-[15px] sm:text-[17px] md:text-lg text-[#7A6555] leading-[1.7] sm:leading-[1.75]">
                 I just wanted you to know how incredibly special you are to me.
                 Every moment with you feels like a beautiful dream that I never
                 want to wake up from.
               </p>
-              <p className="font-[var(--font-hand)] text-[17px] md:text-lg text-[#7A6555] leading-[1.75]">
+              <p className="font-[var(--font-hand)] text-[15px] sm:text-[17px] md:text-lg text-[#7A6555] leading-[1.7] sm:leading-[1.75]">
                 You bring so much joy, laughter, and love into my life. I&apos;m so
                 grateful for every memory we&apos;ve made together, and I can&apos;t wait
                 to create a million more.
               </p>
-              <p className="font-[var(--font-hand)] text-[17px] md:text-lg text-[#7A6555] leading-[1.75]">
+              <p className="font-[var(--font-hand)] text-[15px] sm:text-[17px] md:text-lg text-[#7A6555] leading-[1.7] sm:leading-[1.75]">
                 Thank you for being you — my best friend, my partner, my
                 everything. You make my world complete. 💕
               </p>
             </motion.div>
 
             <motion.div
-              className="pt-3"
+              className="pt-2 sm:pt-3"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.5, duration: 0.6 }}
             >
-              <p className="font-[var(--font-cursive)] text-lg md:text-xl text-[#5C4033]">
+              <p className="font-[var(--font-cursive)] text-base sm:text-lg md:text-xl text-[#5C4033]">
                 Forever yours,
               </p>
-              <p className="font-[var(--font-cursive)] text-xl md:text-2xl text-[#E8789A] mt-1 font-semibold">
+              <p className="font-[var(--font-cursive)] text-lg sm:text-xl md:text-2xl text-[#E8789A] mt-1 font-semibold">
                 With all my love ❤️
               </p>
             </motion.div>
@@ -136,8 +136,8 @@ export default function LoveLetterScreen() {
 
           {/* Bottom heart */}
           <motion.svg
-            className="absolute bottom-4 right-5"
-            width="22" height="22" viewBox="0 0 24 24" fill="#F48BA5"
+            className="absolute bottom-4 right-4 sm:right-5"
+            width="18" height="18" viewBox="0 0 24 24" fill="#F48BA5"
             animate={{ scale: [1, 1.15, 1], rotate: [0, 5, 0] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
@@ -148,7 +148,7 @@ export default function LoveLetterScreen() {
         {/* Bottom masking tape */}
         <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2">
           <div
-            className="w-16 h-5 rounded-sm"
+            className="w-14 sm:w-16 h-4 sm:h-5 rounded-sm"
             style={{
               background: "linear-gradient(135deg, #D4BFA0 0%, #C4A882 100%)",
               opacity: 0.55,
@@ -160,7 +160,7 @@ export default function LoveLetterScreen() {
 
       {/* Made with love footer */}
       <motion.p
-        className="mt-10 text-xs tracking-[0.2em] text-text-muted/40 font-sans"
+        className="mt-6 sm:mt-8 md:mt-10 text-[10px] sm:text-xs tracking-[0.2em] text-text-muted/40 font-sans"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.5 }}

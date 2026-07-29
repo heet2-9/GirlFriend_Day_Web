@@ -9,7 +9,7 @@ interface HeartBalloonScreenProps {
 export default function HeartBalloonScreen({ onNext }: HeartBalloonScreenProps) {
   return (
     <motion.div
-      className="min-h-screen flex flex-col items-center justify-center px-4 relative"
+      className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -30,10 +30,10 @@ export default function HeartBalloonScreen({ onNext }: HeartBalloonScreenProps) 
         >
           {/* The heart balloon */}
           <svg
-            width="280"
-            height="260"
+            width="220"
+            height="205"
             viewBox="0 0 280 260"
-            className="md:w-[340px] md:h-[310px]"
+            className="sm:w-[260px] sm:h-[240px] md:w-[340px] md:h-[310px]"
           >
             <defs>
               <radialGradient id="heartGrad" cx="40%" cy="35%" r="65%">
@@ -95,7 +95,7 @@ export default function HeartBalloonScreen({ onNext }: HeartBalloonScreenProps) 
           </svg>
 
           {/* Balloon string (connecting heart to ribbon) */}
-          <svg width="6" height="45" viewBox="0 0 6 45" className="md:h-[55px] -mt-1">
+          <svg width="6" height="35" viewBox="0 0 6 45" className="sm:h-[40px] md:h-[55px] -mt-1">
             <path
               d="M3 0 C4 10, 2 20, 3 30 C4 35, 2 40, 3 45"
               fill="none"
@@ -108,10 +108,10 @@ export default function HeartBalloonScreen({ onNext }: HeartBalloonScreenProps) 
           {/* Ribbon / Banner */}
           <div className="relative -mt-1">
             <svg
-              width="320"
-              height="70"
+              width="260"
+              height="55"
               viewBox="0 0 320 70"
-              className="md:w-[400px] md:h-[80px]"
+              className="sm:w-[290px] sm:h-[60px] md:w-[400px] md:h-[80px]"
             >
               {/* Left ribbon tail */}
               <path
@@ -155,8 +155,8 @@ export default function HeartBalloonScreen({ onNext }: HeartBalloonScreenProps) 
             </svg>
 
             {/* Text overlay on ribbon */}
-            <div className="absolute inset-0 flex items-center justify-center px-14 md:px-16">
-              <p className="font-[var(--font-cursive)] text-sm md:text-[16px] text-[#8B5E6B] text-center leading-snug">
+            <div className="absolute inset-0 flex items-center justify-center px-10 sm:px-12 md:px-16">
+              <p className="font-[var(--font-cursive)] text-xs sm:text-sm md:text-[16px] text-[#8B5E6B] text-center leading-snug">
                 To the most amazing girl who makes my world so much better :)
               </p>
             </div>
@@ -166,7 +166,7 @@ export default function HeartBalloonScreen({ onNext }: HeartBalloonScreenProps) 
 
       {/* Tap to continue */}
       <motion.p
-        className="mt-10 text-xs md:text-sm tracking-[0.25em] text-text-muted uppercase font-sans"
+        className="mt-6 sm:mt-8 md:mt-10 text-[10px] sm:text-xs md:text-sm tracking-[0.25em] text-text-muted uppercase font-sans"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.3, 0.7, 0.3] }}
         transition={{ duration: 2.5, repeat: Infinity, delay: 1.5 }}
