@@ -5,6 +5,7 @@ import { useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import FloatingHearts from "@/components/FloatingHearts";
 import BalloonCluster from "@/components/BalloonCluster";
+import BackgroundMusic from "@/components/BackgroundMusic";
 import EnvelopeScreen from "@/components/EnvelopeScreen";
 import HeartBalloonScreen from "@/components/HeartBalloonScreen";
 import ScratchCardScreen from "@/components/ScratchCardScreen";
@@ -23,6 +24,7 @@ export default function Home() {
       {/* Persistent decorative elements */}
       <FloatingHearts />
       <BalloonCluster />
+      <BackgroundMusic />
 
       {/* Watermark */}
       <div className="fixed bottom-3 right-4 z-50 pointer-events-none">
