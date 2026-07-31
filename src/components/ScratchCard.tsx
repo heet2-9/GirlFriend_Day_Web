@@ -25,7 +25,7 @@ function BatteryFace({
   const fillWidth = level === 0 ? 12 : level === 50 ? 30 : 48;
 
   return (
-    <div className="relative flex flex-col items-center">
+    <div className="relative flex flex-col items-center select-none">
       {/* Vibration / energy lines above battery */}
       <motion.div
         className="flex items-end justify-center gap-[3px] mb-1"
@@ -100,7 +100,6 @@ function BatteryFace({
         {level === 0 && (
           /* Sad face */
           <g>
-            {/* Eyes — > shape (concerned) */}
             <text
               x="16"
               y="20"
@@ -121,7 +120,6 @@ function BatteryFace({
             >
               •
             </text>
-            {/* Sad mouth */}
             <path
               d="M14 24 Q21 20 28 24"
               fill="none"
@@ -154,7 +152,6 @@ function BatteryFace({
             >
               •
             </text>
-            {/* Slight smile */}
             <path
               d="M20 24 Q28 27 36 24"
               fill="none"
@@ -187,7 +184,6 @@ function BatteryFace({
             >
               •
             </text>
-            {/* Big smile */}
             <path
               d="M19 22 Q28 29 39 22"
               fill="none"
@@ -217,9 +213,18 @@ export default function ScratchCard({
 }: ScratchCardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isMouseDown = useRef(false);
+  const isScratching = useRef(false);
+  const lastPointRef = useRef<{ x: number; y: number } | null>(null);
+  const strokeCountRef = useRef(0);
+  
   const [isRevealed, setIsRevealed] = useState(false);
+  const isRevealedRef = useRef(false);
   const [canvasSize, setCanvasSize] = useState({ width: 340, height: 100 });
+
+  // Sync ref with reveal state
+  useEffect(() => {
+    isRevealedRef.current = isRevealed;
+  }, [isRevealed]);
 
   // Measure container and set canvas size
   useEffect(() => {
@@ -228,7 +233,9 @@ export default function ScratchCard({
 
     const measure = () => {
       const rect = container.getBoundingClientRect();
-      setCanvasSize({ width: rect.width, height: rect.height });
+      if (rect.width > 0 && rect.height > 0) {
+        setCanvasSize({ width: rect.width, height: rect.height });
+      }
     };
 
     measure();
@@ -237,81 +244,71 @@ export default function ScratchCard({
     return () => observer.disconnect();
   }, []);
 
-  const getPos = useCallback(
-    (e: MouseEvent | TouchEvent) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return { x: 0, y: 0 };
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
+  // Calculate position relative to canvas (in CSS pixels)
+  const getCanvasPoint = useCallback((e: PointerEvent | React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+  }, []);
 
-      if ("touches" in e && e.touches.length > 0) {
-        return {
-          x: (e.touches[0].clientX - rect.left) * scaleX,
-          y: (e.touches[0].clientY - rect.top) * scaleY,
-        };
-      }
-      if ("clientX" in e) {
-        return {
-          x: ((e as MouseEvent).clientX - rect.left) * scaleX,
-          y: ((e as MouseEvent).clientY - rect.top) * scaleY,
-        };
-      }
-      return { x: 0, y: 0 };
-    },
-    []
-  );
-
-  const scratchAt = useCallback(
-    (pos: { x: number; y: number }) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.beginPath();
-      ctx.arc(pos.x, pos.y, 24, 0, Math.PI * 2);
-      ctx.fill();
-    },
-    []
-  );
-
+  // Fast sampled transparency check for 65% reveal threshold
   const checkReveal = useCallback(() => {
+    if (isRevealedRef.current) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imageData.data;
-    let transparent = 0;
-    const total = pixels.length / 4;
+    const width = canvas.width;
+    const height = canvas.height;
+    if (width === 0 || height === 0) return;
 
-    for (let i = 3; i < pixels.length; i += 16) {
-      if (pixels[i] === 0) transparent++;
-    }
+    try {
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const pixels = imageData.data;
+      let transparentCount = 0;
+      let sampledCount = 0;
 
-    const sampled = total / 4;
-    const percent = (transparent / sampled) * 100;
+      // Sample every 16th pixel (every 64th byte in RGBA array) for instant performance
+      const step = 64;
+      for (let i = 3; i < pixels.length; i += step) {
+        sampledCount++;
+        if (pixels[i] < 128) {
+          transparentCount++;
+        }
+      }
 
-    if (percent > 45) {
-      setIsRevealed(true);
+      if (sampledCount > 0) {
+        const percent = (transparentCount / sampledCount) * 100;
+        if (percent >= 65) {
+          setIsRevealed(true);
+          isRevealedRef.current = true;
+        }
+      }
+    } catch {
+      // Fallback
     }
   }, []);
 
-  // Draw the scratch surface
-  useEffect(() => {
+  // Draw the scratch cover surface
+  const drawCover = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || isRevealedRef.current) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const { width, height } = canvasSize;
-    const scale = window.devicePixelRatio || 1;
-    canvas.width = width * scale;
-    canvas.height = height * scale;
-    ctx.scale(scale, scale);
+    const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+    
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+
+    ctx.clearRect(0, 0, width, height);
 
     // Pink rounded rectangle background
     const radius = 18;
@@ -327,7 +324,7 @@ export default function ScratchCard({
     ctx.quadraticCurveTo(0, 0, radius, 0);
     ctx.closePath();
 
-    // Gradient fill
+    // Soft gradient fill
     const gradient = ctx.createLinearGradient(0, 0, width, height);
     gradient.addColorStop(0, "#FCC5D5");
     gradient.addColorStop(0.5, "#F9B8CB");
@@ -355,7 +352,7 @@ export default function ScratchCard({
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // "Scratch Me" text
+    // "Scratch Me ✨" text
     ctx.fillStyle = "rgba(92, 64, 51, 0.75)";
     ctx.font = `italic 500 20px 'Dancing Script', cursive`;
     ctx.textAlign = "center";
@@ -363,61 +360,93 @@ export default function ScratchCard({
     ctx.fillText("Scratch Me ✨", width / 2, height / 2);
   }, [canvasSize]);
 
-  // Event listeners
+  // Initial draw and redraw on size change
   useEffect(() => {
+    drawCover();
+  }, [drawCover]);
+
+  // Pointer event handlers for ultra-smooth scratch interaction
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (isRevealedRef.current) return;
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    let scratchCount = 0;
+    try {
+      canvas.setPointerCapture(e.pointerId);
+    } catch {
+      // Ignore
+    }
 
-    const handleStart = (e: MouseEvent | TouchEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      isMouseDown.current = true;
-      const pos = getPos(e);
-      scratchAt(pos);
-    };
+    isScratching.current = true;
+    const pt = getCanvasPoint(e);
+    lastPointRef.current = pt;
 
-    const handleMove = (e: MouseEvent | TouchEvent) => {
-      if (!isMouseDown.current) return;
-      e.preventDefault();
-      const pos = getPos(e);
-      scratchAt(pos);
-      scratchCount++;
-      if (scratchCount % 8 === 0) {
-        checkReveal();
+    // Immediately scratch initial circle on touch/click
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, 28, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isScratching.current || isRevealedRef.current) return;
+
+    const currentPoint = getCanvasPoint(e);
+    const lastPoint = lastPointRef.current || currentPoint;
+
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.lineWidth = 56; // 28px brush radius (56px diameter)
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        ctx.moveTo(lastPoint.x, lastPoint.y);
+        ctx.lineTo(currentPoint.x, currentPoint.y);
+        ctx.stroke();
+        ctx.restore();
       }
-    };
+    }
 
-    const handleEnd = () => {
-      if (isMouseDown.current) {
-        isMouseDown.current = false;
-        checkReveal();
+    lastPointRef.current = currentPoint;
+    strokeCountRef.current += 1;
+
+    // Check reveal every 8 movements during active scratching
+    if (strokeCountRef.current % 8 === 0) {
+      checkReveal();
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isScratching.current) return;
+    isScratching.current = false;
+    lastPointRef.current = null;
+
+    try {
+      const canvas = canvasRef.current;
+      if (canvas && canvas.hasPointerCapture(e.pointerId)) {
+        canvas.releasePointerCapture(e.pointerId);
       }
-    };
+    } catch {
+      // Ignore
+    }
 
-    canvas.addEventListener("mousedown", handleStart);
-    canvas.addEventListener("mousemove", handleMove);
-    canvas.addEventListener("mouseup", handleEnd);
-    canvas.addEventListener("mouseleave", handleEnd);
-    canvas.addEventListener("touchstart", handleStart, { passive: false });
-    canvas.addEventListener("touchmove", handleMove, { passive: false });
-    canvas.addEventListener("touchend", handleEnd);
-
-    return () => {
-      canvas.removeEventListener("mousedown", handleStart);
-      canvas.removeEventListener("mousemove", handleMove);
-      canvas.removeEventListener("mouseup", handleEnd);
-      canvas.removeEventListener("mouseleave", handleEnd);
-      canvas.removeEventListener("touchstart", handleStart);
-      canvas.removeEventListener("touchmove", handleMove);
-      canvas.removeEventListener("touchend", handleEnd);
-    };
-  }, [getPos, scratchAt, checkReveal]);
+    checkReveal();
+  };
 
   return (
     <motion.div
-      className="relative w-full"
+      className="relative w-full select-none"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 + index * 0.15, duration: 0.5 }}
@@ -426,7 +455,7 @@ export default function ScratchCard({
       {/* Card container with dashed pink border */}
       <div
         ref={containerRef}
-        className="relative rounded-2xl overflow-hidden"
+        className="relative rounded-2xl overflow-hidden select-none"
         style={{
           minHeight: "100px",
           border: "2px dashed #F9B8CB",
@@ -434,9 +463,9 @@ export default function ScratchCard({
         }}
       >
         {/* Revealed battery content underneath */}
-        <div className="flex items-center justify-center gap-2 sm:gap-4 px-3 sm:px-5 py-4 sm:py-5">
+        <div className="flex items-center justify-center gap-2 sm:gap-4 px-3 sm:px-5 py-4 sm:py-5 select-none">
           {/* Left text */}
-          <p className="font-[var(--font-cursive)] text-sm sm:text-lg text-[#5C4033] italic text-right min-w-[60px] sm:min-w-[80px]">
+          <p className="font-[var(--font-cursive)] text-sm sm:text-lg text-[#5C4033] italic text-right min-w-[60px] sm:min-w-[80px] select-none">
             {leftText}
           </p>
 
@@ -448,7 +477,7 @@ export default function ScratchCard({
           />
 
           {/* Right text */}
-          <p className="font-[var(--font-cursive)] text-sm sm:text-lg text-[#5C4033] italic min-w-[30px]">
+          <p className="font-[var(--font-cursive)] text-sm sm:text-lg text-[#5C4033] italic min-w-[30px] select-none">
             {rightText}
           </p>
         </div>
@@ -456,7 +485,11 @@ export default function ScratchCard({
         {/* Scratch canvas overlay */}
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 rounded-2xl"
+          className="absolute inset-0 rounded-2xl select-none"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
           style={{
             width: "100%",
             height: "100%",
@@ -464,6 +497,9 @@ export default function ScratchCard({
             transition: "opacity 0.6s ease",
             pointerEvents: isRevealed ? "none" : "auto",
             cursor: isRevealed ? "default" : "crosshair",
+            touchAction: "none",
+            WebkitUserSelect: "none",
+            userSelect: "none",
           }}
         />
 

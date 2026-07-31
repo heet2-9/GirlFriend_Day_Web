@@ -94,7 +94,7 @@ export default function LoveLetterScreen() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
             >
-              My Dearest,
+              My Dearest Aaru😘
             </motion.p>
 
             <motion.div
@@ -104,18 +104,18 @@ export default function LoveLetterScreen() {
               transition={{ delay: 0.9, duration: 0.8 }}
             >
               <p className="font-[var(--font-hand)] text-[15px] sm:text-[17px] md:text-lg text-[#7A6555] leading-[1.7] sm:leading-[1.75]">
-                I just wanted you to know how incredibly special you are to me.
-                Every moment with you feels like a beautiful dream that I never
-                want to wake up from.
+                Happiest Girlfriend Day Aaru😘
               </p>
               <p className="font-[var(--font-hand)] text-[15px] sm:text-[17px] md:text-lg text-[#7A6555] leading-[1.7] sm:leading-[1.75]">
-                You bring so much joy, laughter, and love into my life. I&apos;m so
-                grateful for every memory we&apos;ve made together, and I can&apos;t wait
-                to create a million more.
+                Aarya i just want you to thank you for loving me...supporting me...teasing me...making me laugh...and staying always by my side🥰💕
               </p>
               <p className="font-[var(--font-hand)] text-[15px] sm:text-[17px] md:text-lg text-[#7A6555] leading-[1.7] sm:leading-[1.75]">
-                Thank you for being you — my best friend, my partner, my
-                everything. You make my world complete. 💕
+                I don&apos;t have words to describe what you mean to me madam ji🫣🤭...but I aarya hope you feel it in every moment, every late-night call, and every stupid joke I make just to see you smile.
+                Aaru, I promise to keep making you smile, to stand beside you when life gets hard, to celebrate your victories, and to remind you every single day how incredibly loved you are.
+                Cauzz you arent my just GirlfriendYou're my best friend..you&apos;re my safe place whenever life gets hard
+                Aarya Thank you soo much for being mine 💗💗
+                Happy Girlfriend's Day...aarya
+
               </p>
             </motion.div>
 
@@ -129,7 +129,7 @@ export default function LoveLetterScreen() {
                 Forever yours,
               </p>
               <p className="font-[var(--font-cursive)] text-lg sm:text-xl md:text-2xl text-[#E8789A] mt-1 font-semibold">
-                With all my love ❤️
+                Heetu ❤️
               </p>
             </motion.div>
           </div>

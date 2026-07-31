@@ -28,25 +28,25 @@ export default function PolaroidPhoto({
       }}
     >
       <div
-        className="bg-white p-2.5 pb-12 sm:p-3 sm:pb-14 md:p-4 md:pb-16 shadow-xl rounded-sm relative"
+        className="bg-white p-3 pb-14 sm:p-4 sm:pb-16 md:p-5 md:pb-20 shadow-xl rounded-sm relative"
         style={{
           transform: `rotate(${rotation}deg)`,
           boxShadow: "0 8px 25px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06)",
         }}
       >
         {/* Photo */}
-        <div className="w-40 h-32 sm:w-52 sm:h-40 md:w-64 md:h-48 bg-gray-100 overflow-hidden rounded-sm">
+        <div className="w-52 h-40 sm:w-64 sm:h-52 md:w-80 md:h-64 bg-[#F5F0E1]/40 overflow-hidden rounded-sm flex items-center justify-center">
           <img
             src={imageSrc}
             alt={caption || "Memory"}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain object-center"
             loading="lazy"
           />
         </div>
 
         {/* Caption */}
         {caption && (
-          <p className="absolute bottom-3 sm:bottom-4 left-0 right-0 text-center font-[var(--font-hand)] text-xs sm:text-sm md:text-base text-[#8B7355]">
+          <p className="absolute bottom-3.5 sm:bottom-4 md:bottom-5 left-0 right-0 text-center font-[var(--font-hand)] text-xs sm:text-base md:text-lg text-[#8B7355]">
             {caption}
           </p>
         )}

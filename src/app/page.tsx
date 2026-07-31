@@ -1,4 +1,5 @@
 "use client";
+// Trigger HMR module refresh
 
 import { useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
